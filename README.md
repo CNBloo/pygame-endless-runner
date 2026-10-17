@@ -2,7 +2,7 @@
 
 A 2D side-scrolling runner game written in Python with [Pygame](https://www.pygame.org/). I built this while following the "Master Python by making 5 games" tutorial by Clear Code, then extended it with my own changes.
 
-> **Attribution:** This project is based on the tutorial [Master Python by making 5 games](https://youtu.be/AY9MnQ4x3zk) by [Clear Code](https://www.youtube.com/c/clearcode). The tutorial's author owns the original lesson and example code. See [CREDITS.md](CREDITS.md) for full details. This is an independent learning project and is not affiliated with or endorsed by Clear Code.
+> **Attribution:** This project is based on the tutorial [Master Python by making 5 games](https://youtu.be/AY9MnQ4x3zk) by [Clear Code](https://www.youtube.com/c/clearcode). The tutorial's author owns the original lesson and example code. 
 
 ## Features
 
