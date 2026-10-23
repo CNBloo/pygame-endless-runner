@@ -130,6 +130,7 @@ pygame.display.set_caption('Offline Game')
 clock = pygame.time.Clock()
 test_font = pygame.font.Font('font/Pixeltype.ttf', 50)
 game_active = False
+paused = False
 start_time = 0
 score = 0
 bg_music = pygame.mixer.Sound('audio/music.wav')
@@ -190,6 +191,11 @@ game_name_rect = game_name.get_rect(center = (400,80))
 game_message = test_font.render('Press space to run',False,(111,196,169))
 game_message_rect = game_message.get_rect(center = (400,320))
 
+#Pause Screen
+pause_name = test_font.render('Press P to resume',False,(111,196,169))
+pause_rect = pause_name.get_rect(center = (400,320))
+pause_start = 0 
+
 #Timer
 obstacle_timer = pygame.USEREVENT + 1
 pygame.time.set_timer(obstacle_timer,1500)
@@ -212,12 +218,19 @@ while True:
             if event.type == pygame.KEYDOWN:
                 if event.key == pygame.K_SPACE and player_hitbox.bottom >= 300:
                     player_gravity = -20 
+                if event.key == pygame.K_p:
+                    paused = not paused
+                    if paused:
+                        pause_start = pygame.time.get_ticks()
+                    else:
+                        start_time += int((pygame.time.get_ticks() - pause_start) / 1000)
+
         else:
             if event.type == pygame.KEYDOWN and event.key == pygame.K_SPACE:
                 game_active = True
                 start_time = int(pygame.time.get_ticks() / 1000)
         if game_active:
-            if event.type == obstacle_timer:
+            if event.type == obstacle_timer and not paused:
                 obstacle_group.add(Obstacle(choice(['fly','snail','snail','snail'])))
                 # if randint(0,2):
                 #     obstacles_rect_list.append(snail_surf.get_rect(bottomright = (randint(900,1100),300)))
@@ -234,42 +247,49 @@ while True:
                 else: fly_frame_index = 0
                 fly_surf = fly_frames[fly_frame_index]
 
-    
-
     if game_active:
-        screen.blit(sky_surface, (0,0))
-        screen.blit(ground_surface, (0,300))
-        #pygame.draw.rect(screen,'#c0e8ec',score_rect,10)
-        #pygame.draw.rect(screen,'#c0e8ec',score_rect)
-        #screen.blit(score_surface, score_rect)
-        score = display_score()
+        if paused:
+            screen.fill((94,129,162))
+            p_score_message = test_font.render(f'Your Score:{score}',False,(111,196,169))
+            p_score_message_rect = score_message.get_rect(center = (400,80))
+            screen.blit(pause_name, pause_rect)
+            screen.blit(player_stand,player_stand_rect)
+            screen.blit(p_score_message,p_score_message_rect)
 
-        #pygame.draw.line(screen,'black',(0,0),(800,400),10)
-        #pygame.draw.ellipse(screen,'black',pygame.Rect(50,200,100,100))
+        else:
+            screen.blit(sky_surface, (0,0))
+            screen.blit(ground_surface, (0,300))
+            #pygame.draw.rect(screen,'#c0e8ec',score_rect,10)
+            #pygame.draw.rect(screen,'#c0e8ec',score_rect)
+            #screen.blit(score_surface, score_rect)
+            score = display_score()
 
-        # snail_hitbox.x -= 4
-        # if snail_hitbox.right <= 0:
-        #     snail_hitbox.left = 800
-        # screen.blit(snail_surface,snail_hitbox)
+            #pygame.draw.line(screen,'black',(0,0),(800,400),10)
+            #pygame.draw.ellipse(screen,'black',pygame.Rect(50,200,100,100))
 
-        #Player
-        # player_gravity += 1
-        # player_hitbox.y += player_gravity
-        # if player_hitbox.bottom >= 300: player_hitbox.bottom = 300
-        # player_animation()
-        # screen.blit(player_surf,player_hitbox)
-        player.draw(screen)
-        player.update()
+            # snail_hitbox.x -= 4
+            # if snail_hitbox.right <= 0:
+            #     snail_hitbox.left = 800
+            # screen.blit(snail_surface,snail_hitbox)
 
-        obstacle_group.draw(screen)
-        obstacle_group.update()
+            #Player
+            # player_gravity += 1
+            # player_hitbox.y += player_gravity
+            # if player_hitbox.bottom >= 300: player_hitbox.bottom = 300
+            # player_animation()
+            # screen.blit(player_surf,player_hitbox)
+            player.draw(screen)
+            player.update()
 
-        #Obstacle Movement
-        #obstacles_rect_list = obstacle_movment(obstacles_rect_list)
+            obstacle_group.draw(screen)
+            obstacle_group.update()
 
-        #Collision
-        game_active = collision_sprite()
-        #game_active = collisions(player_hitbox,obstacles_rect_list)
+            #Obstacle Movement
+            #obstacles_rect_list = obstacle_movment(obstacles_rect_list)
+
+            #Collision
+            game_active = collision_sprite()
+            #game_active = collisions(player_hitbox,obstacles_rect_list)
     else:
         screen.fill((94,129,162))
         screen.blit(player_stand,player_stand_rect)
@@ -282,7 +302,9 @@ while True:
         screen.blit(game_name,game_name_rect)
 
         if score == 0: screen.blit(game_message,game_message_rect)
-        else: screen.blit(score_message,score_message_rect)
+        else: screen.blit(score_message,score_message_rect) 
+
+        
 
     # 0 no hit or 1 hit
     #if player_hitbox.colliderect(snail_hitbox):
