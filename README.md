@@ -13,9 +13,8 @@ A 2D side-scrolling runner game written in Python with [Pygame](https://www.pyga
 
 ## What I added beyond the tutorial
 
-- [Your own feature 1]
-- [Your own feature 2]
-- [Refactors, bug fixes, structure changes]
+- Pause Menu
+- High Score Tracker 
 
 ## Getting started
 
